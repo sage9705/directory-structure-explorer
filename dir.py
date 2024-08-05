@@ -31,7 +31,7 @@ class DirectoryStructurePrinter(QWidget):
     def select_directory(self):
         directory = QFileDialog.getExistingDirectory(self, "Select Directory")
         if directory:
-            exclude_list = self.exclude_lineedit.text().split(',')
+            exclude_list = [folder.strip() for folder in self.exclude_lineedit.text().split(',') if folder.strip()]
             self.print_directory_structure(directory, exclude_list)
 
     def print_directory_structure(self, directory, exclude_list):
@@ -41,13 +41,17 @@ class DirectoryStructurePrinter(QWidget):
     def get_directory_structure(self, directory, exclude_list, indent=''):
         structure = indent + os.path.basename(directory) + '/\n'
         indent += '    '
-        for item in os.listdir(directory):
-            item_path = os.path.join(directory, item)
-            if os.path.isdir(item_path):
-                if item not in exclude_list:
-                    structure += self.get_directory_structure(item_path, exclude_list, indent)
-            else:
-                structure += indent + '├── ' + item + '\n'
+        try:
+            items = sorted(os.listdir(directory))
+            for item in items:
+                item_path = os.path.join(directory, item)
+                if os.path.isdir(item_path):
+                    if item not in exclude_list:
+                        structure += self.get_directory_structure(item_path, exclude_list, indent)
+                else:
+                    structure += indent + item + '\n'
+        except PermissionError:
+            structure += indent + "Permission denied\n"
         return structure
 
 def main():
