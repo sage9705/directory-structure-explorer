@@ -1,6 +1,6 @@
 import sys
 import os
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QFileDialog, QTextEdit, QLineEdit
+from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QFileDialog, QTextEdit, QLineEdit
 
 class DirectoryStructurePrinter(QWidget):
     def __init__(self):
@@ -61,7 +61,7 @@ def main():
     window = DirectoryStructurePrinter()
     window.resize(600, 400)  # Set initial size
     window.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
 
 if __name__ == "__main__":
     main()
