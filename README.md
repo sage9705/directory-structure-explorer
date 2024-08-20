@@ -67,13 +67,15 @@ python dir.py
 
 Here is an example of the directory structure output:
 
-└── your_directory/
-├── file1.txt
-├── subfolder1/
-│ ├── file2.txt
-│ └── file3.txt
-└── subfolder2/
-└── file4.txt
+```bash
+    └── your_directory/
+    ├── file1.txt
+    ├── subfolder1/
+    │ ├── file2.txt
+    │ └── file3.txt
+    └── subfolder2/
+    └── file4.txt
+```
 
 ## Customization
 
