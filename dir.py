@@ -31,27 +31,29 @@ class DirectoryStructurePrinter(QWidget):
     def select_directory(self):
         directory = QFileDialog.getExistingDirectory(self, "Select Directory")
         if directory:
-            exclude_list = [folder.strip() for folder in self.exclude_lineedit.text().split(',') if folder.strip()]
+            exclude_list = self.exclude_lineedit.text().split(',')
             self.print_directory_structure(directory, exclude_list)
 
     def print_directory_structure(self, directory, exclude_list):
         structure = self.get_directory_structure(directory, exclude_list)
         self.output_textedit.setPlainText(structure)
 
-    def get_directory_structure(self, directory, exclude_list, indent=''):
-        structure = indent + os.path.basename(directory) + '/\n'
-        indent += '    '
-        try:
-            items = sorted(os.listdir(directory))
-            for item in items:
-                item_path = os.path.join(directory, item)
-                if os.path.isdir(item_path):
-                    if item not in exclude_list:
-                        structure += self.get_directory_structure(item_path, exclude_list, indent)
-                else:
-                    structure += indent + item + '\n'
-        except PermissionError:
-            structure += indent + "Permission denied\n"
+    def get_directory_structure(self, directory, exclude_list, indent='', last=True):
+        items = os.listdir(directory)
+        items = [item for item in items if item not in exclude_list]
+        items = sorted(items)
+
+        structure = indent + ('└── ' if last else '├── ') + os.path.basename(directory) + '/\n'
+        indent += '    ' if last else '│   '
+
+        for i, item in enumerate(items):
+            item_path = os.path.join(directory, item)
+            is_last = i == len(items) - 1
+            if os.path.isdir(item_path):
+                structure += self.get_directory_structure(item_path, exclude_list, indent, is_last)
+            else:
+                structure += indent + ('└── ' if is_last else '├── ') + item + '\n'
+        
         return structure
 
 def main():
